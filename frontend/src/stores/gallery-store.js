@@ -4,8 +4,10 @@ import axios from "axios";
 class GalleryStore {
   albums = [];
   currentAlbum;
-  photos;
+  photos = [];
   currentPhoto;
+  totalPages;
+  currentPage = 1;
 
   constructor() {
     makeAutoObservable(this);
@@ -37,18 +39,38 @@ class GalleryStore {
     }
   };
 
-  getPhotos = async (albumId) => {
-    const res = await axios.get(
-      `http://localhost:8055/items/photos?filter[album_id][_eq]=${albumId}`
+  setCurrentAlbum(albumId) {
+    this.currentAlbum = this.albums.find((a) => a.id == albumId);
+  }
+
+  setCurrentPage(page) {
+    this.currentPage = page;
+  }
+
+  setCurrentPhoto(photo) {
+    this.currentPhoto = photo;
+  }
+
+  getPhotos = async (albumId, page) => {
+    const limit = 10;
+    const offset = (page - 1) * limit;
+    let res = await axios.get(
+      `http://localhost:8055/items/photos?filter[album_id][_eq]=${albumId}&limit=${limit}&offset=${offset}`
     );
 
     let photos = res.data.data;
     console.log(photos);
     let photosWithThumbnails = photos.map((p) => ({
       ...p,
-      thumbnail: `http://localhost:8055/assets/${p.image}?fit=cover&width=292&height=192&quality=100`,
+      thumbnail: `http://localhost:8055/assets/${p.image}?fit=cover&width=320&height=240&quality=100`,
     }));
     this.photos = photosWithThumbnails;
+
+    res = await axios.get(
+      `http://localhost:8055/items/photos?filter[album_id][_eq]=${albumId}&fields=id`
+    );
+    const totalPhotos = res.data.data.length;
+    this.totalPages = Math.ceil(totalPhotos / limit);
   };
 }
 
