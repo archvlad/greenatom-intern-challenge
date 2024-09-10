@@ -7,7 +7,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 
 export default function AlbumCard(props) {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ width: 340 }} style={{ textAlign: "center" }}>
       <CardActionArea>
         <CardMedia
           component="img"

@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import galleryStore from "../stores/gallery-store";
-import { Button, Typography, Pagination } from "@mui/material";
+import { Button, Typography, Pagination, Grid2, Box } from "@mui/material";
 import PhotoModal from "./PhotoModal";
 
 const PhotoList = observer(() => {
@@ -24,27 +24,36 @@ const PhotoList = observer(() => {
 
   return (
     <>
-      <Button variant="text" onClick={() => navigate("/")}>
+      <Button variant="text" color="black" onClick={() => navigate("/")}>
         Назад
       </Button>
-      <Typography variant="h4">
+      <Typography variant="h4" align="center">
         Выбран альбом {galleryStore.currentAlbum?.title}
       </Typography>
-      {galleryStore.photos?.map((p) => {
-        return (
-          <img
-            src={p.thumbnail}
-            key={p.image}
-            onClick={() => handlePhotoClick(p)}
-          />
-        );
-      })}
+      <Grid2 container spacing={{ xs: 2, md: 3 }} mt={5}>
+        {galleryStore.photos?.map((p) => {
+          return (
+            <img
+              src={p.thumbnail}
+              key={p.image}
+              onClick={() => handlePhotoClick(p)}
+            />
+          );
+        })}
+      </Grid2>
       {galleryStore.photos.length > 0 && (
-        <Pagination
-          count={galleryStore.totalPages}
-          page={galleryStore.currentPage}
-          onChange={handleChange}
-        />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          mt={5}
+        >
+          <Pagination
+            count={galleryStore.totalPages}
+            page={galleryStore.currentPage}
+            onChange={handleChange}
+          />
+        </Box>
       )}
 
       {galleryStore.currentPhoto && (
