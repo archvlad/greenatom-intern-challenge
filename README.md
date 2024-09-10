@@ -8,11 +8,14 @@
 ## Запуск бэкэнда
 
 `cd backend`
+
 `docker compose up`
 
 ## Запуск фронтэнда
 
 `cd frontend`
+
 `npm install`
+
 `npm run dev`
 
